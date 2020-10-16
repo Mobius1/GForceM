@@ -14,7 +14,8 @@ GMeter = {
     driver = false,
     textureDict = "mpcarhud",
     pointerSprite = "leaderboard_car_colour_icon_singlecolour",
-    killed = false
+    killed = false,
+    active = true
 }
 
 function GMeter:new(o)
@@ -99,7 +100,7 @@ end
 
 function GMeter:__getXAcceleration()
     self.ang2 = GetEntityPhysicsHeading(self.vehicle)
-    self.ang = ((self.ang2-self.ang3) / self.time) * 0.01745
+    self.ang = ((self.ang2 - self.ang3) / self.time) * (math.pi / 180)
     self.acelX = (self.ang * self.v2) * 98.1
 end
 
@@ -191,11 +192,12 @@ function GMeter:__startInteractionThread()
             if self.killed then
                 return
             end
-
-            self.inVehicle = IsPedInAnyVehicle(self.PlayerPed, false)
-            if self.inVehicle then
-                self.vehicle = GetVehiclePedIsUsing(self.PlayerPed)
-                self.driver = self:__isDriver()
+            if self.active then
+                self.inVehicle = IsPedInAnyVehicle(self.PlayerPed, false)
+                if self.inVehicle then
+                    self.vehicle = GetVehiclePedIsUsing(self.PlayerPed)
+                    self.driver = self:__isDriver()
+                end
             end
             Citizen.Wait(1000)
         end
@@ -210,7 +212,7 @@ function GMeter:__startTimerThread()
                 return
             end
 
-            if self.inVehicle and self.driver then
+            if self.active and self.inVehicle and self.driver then
                 local vtime = GetGameTimer()
                 Citizen.Wait(Config.Tick)
                 self.time = GetGameTimer() - vtime
@@ -229,12 +231,7 @@ function GMeter:__startGForceThread()
                 return
             end
 
-            if self.inVehicle and self.driver then
-                -- PREVENT DIVIDE-BY-ZERO ERRRORS
-                if self.time <= 0 then
-                    self.time = 1
-                end
-    
+            if self.active and self.inVehicle and self.driver then
                 -- UPDATE VEHICLE VECTOR
                 self.vector = GetEntitySpeedVector(self.vehicle, true)
     
@@ -249,6 +246,11 @@ function GMeter:__startGForceThread()
                 -- GET VEHICLE ACCELERATION
                 self:__getXAcceleration()
                 self:__getYAcceleration()
+
+                -- PREVENT DIVIDE-BY-ZERO ERRRORS
+                if self.time <= 0 then
+                    self.time = 1
+                end                
     
                 Citizen.Wait(Config.Tick)
             else
@@ -266,7 +268,7 @@ function GMeter:__startRenderThread()
                 return
             end
 
-            if self.inVehicle and self.driver then
+            if self.active and self.inVehicle and self.driver then
                 -- UPDATE POINTER POSITION
                 Config.Pointer.x = Config.Grid.Pos.x + ((self.acelX / Config.MaxG.x) * Config.Grid.hx)
                 Config.Pointer.y = Config.Grid.Pos.y + ((self.acelY / Config.MaxG.y) * Config.Grid.hy) 
