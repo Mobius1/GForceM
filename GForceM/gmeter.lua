@@ -12,7 +12,8 @@ GMeter = {
     ang = 0, ang2 = 0, ang3 = 0,
     Initialised = false,
     driver = false,
-    textureDict = "gforce",
+    textureDict = "mpcarhud",
+    pointerSprite = "leaderboard_car_colour_icon_singlecolour",
     killed = false
 }
 
@@ -140,8 +141,8 @@ function GMeter:__renderLabels()
 end
 
 function GMeter:__renderPointer()
-    DrawSprite(self.textureDict, "dot64", Config.Pointer.x, Config.Pointer.y, Config.Pointer.w * 1.5, Config.Pointer.h * 1.5, 0.00, Config.Pointer.BorderColor.r, Config.Pointer.BorderColor.g, Config.Pointer.BorderColor.b, Config.Pointer.BorderColor.a)    
-    DrawSprite(self.textureDict, "dot64", Config.Pointer.x, Config.Pointer.y, Config.Pointer.w, Config.Pointer.h, 0.00, Config.Pointer.BackgroundColor.r, Config.Pointer.BackgroundColor.g, Config.Pointer.BackgroundColor.b, Config.Pointer.BackgroundColor.a) 
+    DrawSprite(self.textureDict, self.pointerSprite, Config.Pointer.x, Config.Pointer.y, Config.Pointer.w * 1.5, Config.Pointer.h * 1.5, 0.00, Config.Pointer.BorderColor.r, Config.Pointer.BorderColor.g, Config.Pointer.BorderColor.b, Config.Pointer.BorderColor.a)    
+    DrawSprite(self.textureDict, self.pointerSprite, Config.Pointer.x, Config.Pointer.y, Config.Pointer.w, Config.Pointer.h, 0.00, Config.Pointer.BackgroundColor.r, Config.Pointer.BackgroundColor.g, Config.Pointer.BackgroundColor.b, Config.Pointer.BackgroundColor.a) 
 end
 
 function GMeter:__renderGrid()

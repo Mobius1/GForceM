@@ -23,7 +23,7 @@ Config.Grid = {                     -- Grid position
 }
 
 Config.Pointer = {
-    Size = 0.004,          -- Pointer radius
+    Size = 0.008,          -- Pointer radius
     BackgroundColor = {    -- Pointer color
         r = 35,
         g = 132,
