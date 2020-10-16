@@ -1,23 +1,36 @@
-local FirstSpawn    = true
-local GMETER        = false
+METER = false
 
 AddEventHandler("playerSpawned", function()
-    if FirstSpawn then
-        FirstSpawn = false
-    
-        GMETER = GMeter:new()
-        GMETER:__init()
-    end    
+    if Config.Enabled then
+        if not METER then
+            METER = GMeter:new()
+        else
+            METER:__destroy()
+        end
+
+        Citizen.SetTimeout(3000, function()
+            METER:__init()
+        end)
+    end
 end)
 
--- ALLOW RESTART
-if FirstSpawn then
-    if not GMETER then
-        GMETER = GMeter:new()
-        GMETER:__init()
-    else
-        if not GMETER.Initialised then
-            GMETER:__init()
+AddEventHandler('onResourceStart', function(resource)
+    if Config.Enabled then
+        if resource == GetCurrentResourceName() then
+            if METER == false then
+                METER = GMeter:new()
+            end
         end
     end
-end 
+end)
+
+AddEventHandler('onResourceStop', function(resource)
+    if Config.Enabled then
+        if resource == GetCurrentResourceName() then
+            if METER ~= false then
+                METER:__destroy()
+                METER = false
+            end    
+        end
+    end
+end)

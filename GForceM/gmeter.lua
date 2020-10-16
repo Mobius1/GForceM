@@ -8,11 +8,12 @@ GMeter = {
     vector = vector3(0,0,0),
     v1 = 0, v2 = 0,
     acelY = 0, acelX = 0,
-    vime = 0, time = 1,
+    time = 1,
     ang = 0, ang2 = 0, ang3 = 0,
     Initialised = false,
     driver = false,
-    textureDict = "gforce"
+    textureDict = "gforce",
+    killed = false
 }
 
 function GMeter:new(o)
@@ -23,26 +24,34 @@ function GMeter:new(o)
 end
 
 function GMeter:__init()
-    self.PlayerPed = PlayerPedId()
-    self.inVehicle = IsPedInAnyVehicle(self.PlayerPed, false)
-    
-    if self.inVehicle then
-        self.vehicle = GetVehiclePedIsUsing(self.PlayerPed)
-        self.driver = self:__isDriver()
-    end   
-     
-    self.vtime = GetGameTimer()
+    if not self.Initialised then
+        Citizen.CreateThread(function()
+            self.Initialised = true
+            self.killed = false
 
-    self:__getScreenSize()
-    self:__createGrid()
-    self:__createPointer() 
+            self.PlayerPed = PlayerPedId()
+            self.inVehicle = IsPedInAnyVehicle(self.PlayerPed, false)
+            
+            if self.inVehicle then
+                self.vehicle = GetVehiclePedIsUsing(self.PlayerPed)
+                self.driver = self:__isDriver()
+            end
 
-    self:__startInteractionThread()
-    self:__startTimerThread()
-    self:__startGForceThread()
-    self:__startRenderThread()
+            self:__getScreenSize()
+            self:__createGrid()
+            self:__createPointer() 
 
-    self.Initialised = true
+            self:__startInteractionThread()
+            self:__startTimerThread()
+            self:__startGForceThread()
+            self:__startRenderThread()
+        end)
+    end
+end
+
+function GMeter:__destroy()
+    self.Initialised = false
+    self.killed = true
 end
 
 function GMeter:__getScreenSize()
@@ -61,16 +70,14 @@ function GMeter:__createGrid()
 end
 
 function GMeter:__createPointer()
-    Citizen.CreateThread(function()
-        -- LOAD SPRITE
-        if not HasStreamedTextureDictLoaded(self.textureDict) then
-            RequestStreamedTextureDict(self.textureDict)
-        
-            while not HasStreamedTextureDictLoaded(self.textureDict) do
-                Citizen.Wait(1)
-            end
-        end           
-    end) 
+    -- LOAD SPRITE
+    if not HasStreamedTextureDictLoaded(self.textureDict) then
+        RequestStreamedTextureDict(self.textureDict)
+    
+        while not HasStreamedTextureDictLoaded(self.textureDict) do
+            Citizen.Wait(1)
+        end
+    end           
 
     Config.Pointer.x = 0
     Config.Pointer.y = 0
@@ -180,6 +187,10 @@ end
 function GMeter:__startInteractionThread()
     Citizen.CreateThread(function()
         while true do
+            if self.killed then
+                return
+            end
+
             self.inVehicle = IsPedInAnyVehicle(self.PlayerPed, false)
             if self.inVehicle then
                 self.vehicle = GetVehiclePedIsUsing(self.PlayerPed)
@@ -193,6 +204,11 @@ end
 function GMeter:__startTimerThread()
     Citizen.CreateThread(function()
         while true do
+
+            if self.killed then
+                return
+            end
+
             if self.inVehicle and self.driver then
                 local vtime = GetGameTimer()
                 Citizen.Wait(Config.Tick)
@@ -207,6 +223,11 @@ end
 function GMeter:__startGForceThread()
     Citizen.CreateThread(function()
         while true do
+
+            if self.killed then
+                return
+            end
+
             if self.inVehicle and self.driver then
                 -- PREVENT DIVIDE-BY-ZERO ERRRORS
                 if self.time <= 0 then
@@ -239,6 +260,11 @@ end
 function GMeter:__startRenderThread()
     Citizen.CreateThread(function()
         while true do
+
+            if self.killed then
+                return
+            end
+
             if self.inVehicle and self.driver then
                 -- UPDATE POINTER POSITION
                 Config.Pointer.x = Config.Grid.Pos.x + ((self.acelX / Config.MaxG.x) * Config.Grid.hx)

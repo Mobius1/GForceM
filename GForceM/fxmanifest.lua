@@ -6,7 +6,7 @@ description 'GForceM - Vehicle G-Force meter for FiveM'
 
 author 'Karl Saunders'
 
-version '0.0.1'
+version '0.0.2'
 
 client_scripts {
     'config.lua',
