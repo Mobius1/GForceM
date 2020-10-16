@@ -61,14 +61,16 @@ function GMeter:__createGrid()
 end
 
 function GMeter:__createPointer()
-    -- LOAD SPRITE
-    if not HasStreamedTextureDictLoaded(self.textureDict) then
-        RequestStreamedTextureDict(self.textureDict)
-    
-        while not HasStreamedTextureDictLoaded(self.textureDict) do
-            Citizen.Wait(1)
-        end
-    end    
+    Citizen.CreateThread(function()
+        -- LOAD SPRITE
+        if not HasStreamedTextureDictLoaded(self.textureDict) then
+            RequestStreamedTextureDict(self.textureDict)
+        
+            while not HasStreamedTextureDictLoaded(self.textureDict) do
+                Citizen.Wait(1)
+            end
+        end           
+    end) 
 
     Config.Pointer.x = 0
     Config.Pointer.y = 0
