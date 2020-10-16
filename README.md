@@ -8,7 +8,7 @@ Vehicle G-Force meter for FiveM
 * [Configuration](#configuration)
 
 ## Demo Videos
-* [Demo](https://streamable.com/mb85ar)
+* [Demo](https://streamable.com/empza2)
 
 ## Requirements
 
