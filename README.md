@@ -16,7 +16,7 @@ Vehicle G-Force meter for FiveM
 
 ## Download & Installation
 
-* Download and extract the package: https://github.com/Mobius1/GForceM/archive/master.zip
+* Download and extract the package: https://github.com/Mobius1/GForceM/archive/main.zip
 * Drop the `GForceM` directory into you `resources` directory
 * Add `ensure GForceM` in your `server.cfg`
 * Edit `config.lua` to your liking
