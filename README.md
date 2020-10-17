@@ -6,6 +6,7 @@ Vehicle G-Force meter for FiveM
 * [Requirements](#requirements)
 * [Download & Installation](#download--installation)
 * [Configuration](#configuration)
+* [Commands](#commands)
 
 ## Demo Videos
 * [Demo](https://streamable.com/empza2)
@@ -68,6 +69,14 @@ Config.MaxG = {
     y = 5.0         -- Max longitudinal G
 }
 ```
+
+## Commands
+
+#### `/gshow` - Show the G-Meter
+#### `/ghide` - Hide the G-Meter
+#### `/gtoggle` - Toggle the G-Meter
+```
+
 
 
 ## Contributing
