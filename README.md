@@ -75,7 +75,7 @@ Config.MaxG = {
 #### `/gshow` - Show the G-Meter
 #### `/ghide` - Hide the G-Meter
 #### `/gtoggle` - Toggle the G-Meter
-```
+
 
 
 
