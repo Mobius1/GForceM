@@ -34,3 +34,19 @@ AddEventHandler('onResourceStop', function(resource)
         end
     end
 end)
+
+TriggerEvent('chat:addSuggestion', '/gshow', 'Show the G-Meter')
+TriggerEvent('chat:addSuggestion', '/ghide', 'Hide the G-Meter')
+TriggerEvent('chat:addSuggestion', '/gtoggle', 'Toggle the G-Meter')
+
+RegisterCommand("gshow", function(source, args, raw)
+    METER.active = true
+end)
+
+RegisterCommand("ghide", function(source, args, raw)
+    METER.active = false
+end)
+
+RegisterCommand("gtoggle", function(source, args, raw)
+    METER.active = not METER.active
+end)

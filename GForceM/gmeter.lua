@@ -100,7 +100,7 @@ end
 
 function GMeter:__getXAcceleration()
     self.ang2 = GetEntityPhysicsHeading(self.vehicle)
-    self.ang = ((self.ang2 - self.ang3) / self.time) * (math.pi / 180)
+    self.ang = ((self.ang2-self.ang3) / self.time) * (math.pi / 180)
     self.acelX = (self.ang * self.v2) * 98.1
 end
 
